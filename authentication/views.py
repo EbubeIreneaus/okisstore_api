@@ -31,3 +31,13 @@ class Auth(APIView):
             except Exception as e:
                 return JsonResponse({'status':'failed', 'msg':'Could not create Profile', 'code':str(e)})
         return JsonResponse({'status': 'failed','msg':'form is not valid', 'code': str(form.errors)})
+
+    def get(self, request):
+        email = request.GET.get('email', '')
+        psw = request.GET.get('password', '')
+
+        try:
+            profile = Profile.objects.get(email = email, psw = psw)
+            return JsonResponse({'status':'success', 'id':profile.id})
+        except Exception as e:
+            return JsonResponse({'status':'failed','msg':'user not found on our system', 'code':str(e)})
